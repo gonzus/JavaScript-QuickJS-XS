@@ -1,0 +1,17 @@
+.gitignore
+Changes
+quickjs.xs
+lib/JavaScript/QuickJS/XS.pm
+pl_quickjs.c
+pl_quickjs.h
+pl_util.c
+pl_util.h
+bin/release.sh
+LICENSE
+MANIFEST
+MANIFEST.SKIP
+Makefile.PL
+ppport.h
+README.md
+typemap
+t/00_basic.t
