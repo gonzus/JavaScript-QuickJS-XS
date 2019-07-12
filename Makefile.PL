@@ -17,7 +17,7 @@ WriteMakefile(
     AUTHOR         => [
         'Gonzalo Diethelm (gonzus@cpan.org)',
     ],
-    LIBS           => [''],
+    LIBS           => [ '-L/usr/local/lib/quickjs -lquickjs'],
 #    DEFINE         => '-DGMEM_CHECK',
     INC            => '-I. -I/usr/local/include',
     OBJECT         => '$(O_FILES)',

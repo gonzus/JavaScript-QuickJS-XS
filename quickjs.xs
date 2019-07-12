@@ -4,6 +4,7 @@
 #include "XSUB.h"
 #include "ppport.h"
 
+#include <stdio.h>
 #include "pl_quickjs.h"
 #include "pl_util.h"
 
@@ -18,6 +19,9 @@ static void set_up(QuickJS* quickjs)
     if (quickjs->inited) {
         return;
     }
+    quickjs->runtime = JS_NewRuntime();
+    quickjs->context = JS_NewContext(quickjs->runtime);
+    fprintf(stderr, "GONZO: created runtime %p, context %p\n", quickjs->runtime, quickjs->context);
     quickjs->inited = 1;
 }
 
@@ -26,6 +30,10 @@ static void tear_down(QuickJS* quickjs)
     if (!quickjs->inited) {
         return;
     }
+    fprintf(stderr, "GONZO: destroying runtime %p, context %p\n", quickjs->runtime, quickjs->context);
+    js_std_free_handlers(quickjs->runtime);
+    JS_FreeContext(quickjs->context);
+    JS_FreeRuntime(quickjs->runtime);
     quickjs->inited = 0;
 }
 

@@ -12,6 +12,8 @@
  */
 typedef struct QuickJS {
     int inited;
+    JSRuntime* runtime;
+    JSContext* context;
 } QuickJS;
 
 /* Run the QuickJS GC */
