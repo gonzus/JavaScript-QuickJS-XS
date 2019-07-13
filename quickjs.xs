@@ -5,6 +5,8 @@
 #include "ppport.h"
 
 #include <stdio.h>
+#include <quickjs/quickjs.h>
+#include <quickjs/quickjs-libc.h>
 #include "pl_quickjs.h"
 #include "pl_util.h"
 
@@ -37,7 +39,7 @@ static void tear_down(QuickJS* quickjs)
     quickjs->inited = 0;
 }
 
-static QuickJS* create_quickjstape_object(pTHX_ HV* opt)
+static QuickJS* create_quickjs_object(pTHX_ HV* opt)
 {
     QuickJS* quickjs = (QuickJS*) malloc(sizeof(QuickJS));
     memset(quickjs, 0, sizeof(QuickJS));
@@ -64,7 +66,7 @@ QuickJS*
 new(char* CLASS, HV* opt = NULL)
   CODE:
     UNUSED_ARG(opt);
-    RETVAL = create_quickjstape_object(aTHX_ opt);
+    RETVAL = create_quickjs_object(aTHX_ opt);
   OUTPUT: RETVAL
 
 void
@@ -72,3 +74,12 @@ reset(QuickJS* quickjs)
   PPCODE:
     tear_down(quickjs);
     set_up(quickjs);
+
+SV*
+eval(QuickJS* quickjs, const char* js, const char* file = 0)
+  CODE:
+    SV* undef = &PL_sv_undef;
+    fprintf(stderr, "GONZO: calling eval [%s]\n", js);
+    RETVAL = pl_eval(aTHX_ quickjs, js, file);
+    fprintf(stderr, "GONZO: called eval => %p -- undef = %p\n", RETVAL, undef);
+  OUTPUT: RETVAL

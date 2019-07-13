@@ -32,7 +32,7 @@ README
 !Build/
 !META.json
 !LICENSE
-duk.c
+quickjs.c
 *.o
 *.bs
 *.sw?
