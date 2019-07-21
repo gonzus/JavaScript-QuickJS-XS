@@ -6,8 +6,8 @@
 #define NEED_sv_2pv_flags
 #include "ppport.h"
 
-static int eval_buf(JSContext* ctx, const void* buf, int buf_len,
-                    const char* filename, int eval_flags) {
+int eval_buf(JSContext* ctx, const void* buf, int buf_len,
+             const char* filename, int eval_flags) {
     int ret = 0;
     fprintf(stderr, "EVAL [%*.*s]\n", buf_len, buf_len, buf);
     JSValue val = JS_Eval(ctx, buf, buf_len, filename, eval_flags);
@@ -40,7 +40,8 @@ SV* pl_eval(pTHX_ QuickJS* quickjs, const char* js, const char* file) {
     SV* ret = &PL_sv_undef; /* return undef by default */
     int rc = 0;
     rc = eval_buf(quickjs->context, js, strlen(js), "<str>", 0);
-    fprintf(stderr, "EVAL DONE => %d\n", rc);
+    // TODO: is this necessary?
+    // js_std_loop(quickjs->context);
     return ret;
 }
 

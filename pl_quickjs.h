@@ -16,6 +16,9 @@ typedef struct QuickJS {
     JSContext* context;
 } QuickJS;
 
+int eval_buf(JSContext* ctx, const void* buf, int buf_len,
+             const char* filename, int eval_flags);
+
 SV* pl_eval(pTHX_ QuickJS* quickjs, const char* js, const char* file);
 int pl_run_gc(QuickJS* duk);
 

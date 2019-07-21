@@ -23,6 +23,21 @@ static void set_up(QuickJS* quickjs)
     }
     quickjs->runtime = JS_NewRuntime();
     quickjs->context = JS_NewContext(quickjs->runtime);
+
+    // JS_SetModuleLoaderFunc(rt, NULL, js_module_loader, NULL);
+
+    /* system modules */
+    js_init_module_std(quickjs->context, "std");
+    js_init_module_os(quickjs->context, "os");
+
+    /* make 'std' and 'os' visible to non module code */
+    const char *str =
+        "import * as std from 'std';\n"
+        "import * as os from 'os';\n"
+        "std.global.std = std;\n"
+        "std.global.os = os;\n";
+    eval_buf(quickjs->context, str, strlen(str), "<input>", JS_EVAL_TYPE_MODULE);
+
     fprintf(stderr, "GONZO: created runtime %p, context %p\n", quickjs->runtime, quickjs->context);
     quickjs->inited = 1;
 }
@@ -78,8 +93,5 @@ reset(QuickJS* quickjs)
 SV*
 eval(QuickJS* quickjs, const char* js, const char* file = 0)
   CODE:
-    SV* undef = &PL_sv_undef;
-    fprintf(stderr, "GONZO: calling eval [%s]\n", js);
     RETVAL = pl_eval(aTHX_ quickjs, js, file);
-    fprintf(stderr, "GONZO: called eval => %p -- undef = %p\n", RETVAL, undef);
   OUTPUT: RETVAL
